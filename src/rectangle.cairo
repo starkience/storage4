@@ -8,7 +8,7 @@ impl RectangleImpl of RectangleTrait {
     }
 }
 
-fn main () {
-    let rect1 = Rectangle { width:30, height:50, };
+fn main() {
+    let rect1 = Rectangle { width: 30, height: 50, };
     println!("Area is {}", rect1.area());
 }

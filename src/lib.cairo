@@ -6,7 +6,6 @@
 // Remember: we're mapping with a LegacyMap and matching the owner's address with a u64, which we set at the value 0
 //name and address HAVE to be supplied when deploying the contract
 
-
 use starknet::ContractAddress;
 
 
@@ -74,9 +73,7 @@ mod SimpleStorage {
             let caller = get_caller_address();
             self._store_number(caller, number);
         }
-        fn get_total(self: @ContractState, total_number: u128) -> u128 {
-
-        }
+        fn get_total(self: @ContractState, total_number: u128) -> u128 {}
     }
 
     #[generate_trait]
