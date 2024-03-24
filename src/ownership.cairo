@@ -36,7 +36,7 @@ mod Ownership {
 
     #[generate_trait]
     impl Private of PrivateTrait {
-        fn only_owner(self: ContractState) {
+        fn only_owner(self: @ContractState) {
             let caller = get_caller_address();
             assert(caller == self.owner.read(), 'Caller not the owner');
         }

@@ -42,7 +42,8 @@ mod SimpleStorage {
         user: ContractAddress,
         number: u64,
     }
-    
+
+
     #[derive(
         Copy, Drop, Serde, starknet::Store
     )] // we added a person struct that specifies the owner of the address. The owner has a name to 
@@ -57,7 +58,7 @@ mod SimpleStorage {
         self.numbers.write(owner.address, 0);
         self.total_unique_numbers.write(1);
     } 
-
+    
     #[abi(embed_v0)]
     impl SimpleStorage of super::ISimpleStorage<ContractState> {
         fn get_number(self: @ContractState, address: ContractAddress) -> u64 {
