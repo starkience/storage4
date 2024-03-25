@@ -13,20 +13,26 @@ use starknet::ContractAddress;
 pub trait ISimpleStorage<TContractState> {
     fn get_number(self: @TContractState, address: ContractAddress) -> u64;
     fn store_number(ref self: TContractState, number: u64);
+// either add get result from sum
 }
 
+
+// add interface other_contract
+// 1 fonction implemented insum.cairo
 
 #[starknet::contract]
 mod SimpleStorage {
     use starknet::get_caller_address;
     use starknet::ContractAddress;
-    use super::{ISimpleStorageDispatcherTrait, ISimpleStorageDispatcher};
+    use storage4::sum::{ISumDispatcherTrait, ISumDispatcher};
 
     #[storage]
     pub struct Storage {
         number: LegacyMap::<ContractAddress, u64>,
         owner: person,
-        total_unique_numbers: u128
+        operation_counter: u128,
+        sum_contract: ISumDispatcher,
+
     }
 
     #[event]
@@ -52,10 +58,11 @@ mod SimpleStorage {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState, owner: person) {
+    fn constructor(ref self: ContractState, owner: person, sum_contract_address: ContractAddress) {
         self.owner.write(owner); // Person object and written into the contract's storage
         self.number.write(owner.address, 0);
-        self.total_unique_numbers.write(1);
+        self.operation_counter.write(1);
+        self.sum_contract.write(ISumDispatcher{contract_address: sum_contract_address}) // initialize dispatcher
     }
 
     #[abi(embed_v0)]
@@ -66,16 +73,18 @@ mod SimpleStorage {
         }
         fn store_number(ref self: ContractState, number: u64) {
             let caller = get_caller_address();
-            self._store_number(caller, number);
+            let sum_contract = self.sum_contract.read();
+            let sum = sum_contract.increment(number); //dispatcher call
+            self._store_number(caller, sum);
         }
     }
 
     #[generate_trait]
     impl Private of PrivateTrait {
         fn _store_number(ref self: ContractState, user: ContractAddress, number: u64) {
-            let mut total_unique_numbers = self.total_unique_numbers.read();
+            let operation_counter = self.operation_counter.read();
             self.number.write(user, number);
-            self.total_unique_numbers.write(total_unique_numbers + 1);
+            self.operation_counter.write(operation_counter + 1);
             self.emit(StoredNumber { user: user, number: number });
         }
     }
