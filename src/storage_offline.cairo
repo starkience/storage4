@@ -11,20 +11,18 @@ use starknet::ContractAddress;
 
 #[starknet::interface]
 pub trait ISimpleStorage<TContractState> {
-    fn get_number(self: @TContractState, address: ContractAddress) -> u64;
+    fn get_number(self: @TContractState) -> u64;
     fn store_number(ref self: TContractState, number: u64);
 }
 
 
 #[starknet::contract]
 mod SimpleStorage {
-    use starknet::get_caller_address;
     use starknet::ContractAddress;
-    use super::{ISimpleStorageDispatcherTrait, ISimpleStorageDispatcher};
 
     #[storage]
     pub struct Storage {
-        number: LegacyMap::<ContractAddress, u64>,
+        number: u64,
         owner: person,
         total_unique_numbers: u128
     }
@@ -35,12 +33,11 @@ mod SimpleStorage {
         StoredNumber: StoredNumber,
     }
 
-    #[derive(Drop, starknet::Event)]
-    struct StoredNumber {
-        #[key]
-        user: ContractAddress,
-        number: u64,
-    }
+     #[derive(Drop, starknet::Event)]
+     struct StoredNumber {
+         #[key]
+         number: u64,
+        }
 
 
     #[derive(
@@ -60,8 +57,8 @@ mod SimpleStorage {
 
     #[abi(embed_v0)]
     impl SimpleStorage of super::ISimpleStorage<ContractState> {
-        fn get_number(self: @ContractState, address: ContractAddress) -> u64 {
-            let number = self.number.read(address);
+        fn get_number(self: @ContractState) -> u64 {
+            let number = self.number.read();
             number
         }
         fn store_number(ref self: ContractState, number: u64) {
@@ -72,11 +69,11 @@ mod SimpleStorage {
 
     #[generate_trait]
     impl Private of PrivateTrait {
-        fn _store_number(ref self: ContractState, user: ContractAddress, number: u64) {
+        fn _store_number(ref self: ContractState, number: u64) {
             let mut total_unique_numbers = self.total_unique_numbers.read();
-            self.number.write(user, number);
+            self.number.write(number);
             self.total_unique_numbers.write(total_unique_numbers + 1);
-            self.emit(StoredNumber { user: user, number: number });
+            self.emit(StoredNumber {number: number });
         }
     }
 }

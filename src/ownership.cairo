@@ -19,18 +19,17 @@ mod Ownership {
     #[abi(embed_v0)]
     impl Ownership of super::IOwnership<ContractState> {
         fn transfer_ownership(
-            ref self: ContractState, // error: Variable was previously moved.
-             new_owner: ContractAddress)
-        {
+            ref self: ContractState,
+            new_owner: ContractAddress
+        ) {
             self.only_owner();
-           //  let prev_owner = self.owner.read(); // removed for now because we are not emitting events
+            //  let prev_owner = self.owner.read(); // removed for now because we are not emitting events
             self.owner.write(new_owner);
         }
 
         fn owner(self: @ContractState) -> ContractAddress {
-        self.owner.read()
+            self.owner.read()
         }
-
     }
 
 
