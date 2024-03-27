@@ -28,19 +28,12 @@ mod sum {
             self.sum.write(n);
             n
         }
-    } 
+    }
 }
 // would you have these tests in a seperate file? OR can we keep it in the main file of the smart contract
-mod tests{
-
-use snforge_std::{ declare, ContractClassTrait };
+mod tests {
+    use snforge_std::{declare, ContractClassTrait};
     #[test]
     #[available_gas(100000)]
-    fn unit_test() {
-
-
-
-
-
-    }
+    fn unit_test() {}
 }
