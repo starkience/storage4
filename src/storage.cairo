@@ -32,7 +32,6 @@ mod SimpleStorage {
         owner: person,
         operation_counter: u128,
         sum_contract: ISumDispatcher,
-
     }
 
     #[event]
@@ -62,7 +61,11 @@ mod SimpleStorage {
         self.owner.write(owner); // Person object and written into the contract's storage
         self.number.write(owner.address, 0);
         self.operation_counter.write(1);
-        self.sum_contract.write(ISumDispatcher{contract_address: sum_contract_address}) // initialize dispatcher
+        self
+            .sum_contract
+            .write(
+                ISumDispatcher { contract_address: sum_contract_address }
+            ) // initialize dispatcher
     }
 
     #[abi(embed_v0)]
