@@ -38,14 +38,13 @@ mod sum {
         fn get_sum(self: @ContractState) -> u64 {
             self.sum.read()
         }
-
     }
 }
 
 #[cfg(test)]
 mod test {
     use storage4::sum::{ISumDispatcherTrait, ISumDispatcher};
-    use snforge_std::{ declare, ContractClassTrait, start_prank, CheatTarget };
+    use snforge_std::{declare, ContractClassTrait, start_prank, CheatTarget};
 
     #[test]
     fn test_sum() {
@@ -64,14 +63,13 @@ mod test {
         assert(stored_sum == 100, 'balance is not 100');
     }
 }
+//assert(sum == 0, "Initial storage value not 0");
 
-    //assert(sum == 0, "Initial storage value not 0");
+// dispatcher.sum(100);
 
-   // dispatcher.sum(100);
-
-  //let result = sum(incr_value: 42);
+//let result = sum(incr_value: 42);
 // assert_eq!(result == 42, 'No increment');
-    // }
+// }
 // }
 
 // initialize the state
@@ -92,3 +90,4 @@ mod test {
 
 // starknet::deploy_syscall directly
 // or initialize state
+
